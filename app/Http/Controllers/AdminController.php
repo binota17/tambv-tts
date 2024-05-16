@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
+    public function showRegistrationForm()
+    {
+        return view('admin.register');
+    }
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -42,11 +46,10 @@ class AdminController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-        
+
         if (Auth::guard('admin')->attempt($credentials)) {
             // dd(1);
-            // return redirect()->intended('admin/dashboard');
-        
+
             return redirect()->route('admin.dashboard');
         }
 
@@ -64,5 +67,19 @@ class AdminController extends Controller
     public function showDashboard()
     {
         return view('admin.dashboard');
+    }
+
+    public function index()
+    {
+
+        return view('admin.index');
+
+    }
+
+    public function index_limited()
+    {
+
+        return view('admin.index_limited');
+
     }
 }

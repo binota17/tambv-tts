@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('admins', function (Blueprint $table) {
+            $table->string('role')->default('full_access')->after('password');
         });
     }
 
@@ -26,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admins');
+        Schema::table('admins', function (Blueprint $table) {
+            $table->dropColumn('role');
+        }); 
     }
 };

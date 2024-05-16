@@ -38,8 +38,9 @@ Route::prefix('admin')->group(function () {
     Route::get('login', [AdminController::class, 'showLoginForm'])->name('admin.login');
     Route::post('login', [AdminController::class, 'login']);
     Route::post('logout', [AdminController::class, 'logout'])->name('admin.logout');
-    Route::get('dashboard', function() {
-        return view('admin.dashboard');
-    })->middleware('auth:admin')->name('admin.dashboard');
-    
+    Route::get('index', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('index_limited', [AdminController::class, 'index_limited'])->name('admin.index_limited');
+    Route::get('dashboard', [AdminController::class,'showDashboard'])->middleware('auth:admin')->name('admin.dashboard');
 });
+
+
