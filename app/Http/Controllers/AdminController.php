@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 
 class AdminController extends Controller
 {
@@ -44,9 +46,7 @@ class AdminController extends Controller
         $credentials = $request->only('email', 'password');
         
         if (Auth::guard('admin')->attempt($credentials)) {
-            // dd(1);
-            // return redirect()->intended('admin/dashboard');
-        
+
             return redirect()->route('admin.dashboard');
         }
 
@@ -64,5 +64,51 @@ class AdminController extends Controller
     public function showDashboard()
     {
         return view('admin.dashboard');
+    }
+
+    public function index()
+    {
+        if (Gate::forUser(Auth::guard('admin')->user())->allows('view-users')) {
+            return view('admin.index');
+        }
+
+        return redirect()->route('admin.dashboard')->with('error', 'You do not have permission to view users.');
+    }
+
+    public function details()
+    {
+        if (Gate::allows('view-users')) {
+            return view('users.show');
+        }
+
+        return redirect()->route('admin.dashboard')->with('error', 'You do not have permission to view this user.');
+    }
+
+    public function create()
+    {
+        if (Gate::allows('create-users')) {
+            return view('users.create');
+        }
+
+        return redirect()->route('admin.dashboard')->with('error', 'You do not have permission to create users.');
+    }
+
+
+    public function edit()
+    {
+        if (Gate::allows('update-users')) {
+            return view('users.edit');
+        }
+
+        return redirect()->route('admin.dashboard')->with('error', 'You do not have permission to edit users.');
+    }
+
+    public function delete()
+    {
+        if (Gate::allows('delete-users')) {
+            return redirect()->route('users.index');
+        }
+
+        return redirect()->route('admin.dashboard')->with('error', 'You do not have permission to delete users.');
     }
 }

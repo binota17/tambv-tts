@@ -41,5 +41,6 @@ Route::prefix('admin')->group(function () {
     Route::get('dashboard', function() {
         return view('admin.dashboard');
     })->middleware('auth:admin')->name('admin.dashboard');
-    
+    Route::get('index', [AdminController::class,'index'])->name('list.user');
+    Route::get('edit', [AdminController::class,'edit'])->name('edit.user');
 });
